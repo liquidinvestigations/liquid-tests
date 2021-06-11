@@ -1,0 +1,16 @@
+{
+  "name": "hoover-ui-test",
+  "version": "1.0.0",
+  "description": "hoover ui e2e tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/cucumber-js -f @cucumber/pretty-formatter"
+  },
+  "dependencies": {
+    "@cucumber/cucumber": "^7.2.1",
+    "@cucumber/pretty-formatter": "^1.0.0-alpha.0",
+    "chai": "^4.3.4",
+    "dotenv": "^10.0.0",
+    "puppeteer": "^10.0.0"
+  }
+}
