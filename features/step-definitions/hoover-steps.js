@@ -7,7 +7,6 @@ const XPath = {
     categories: '//*[@data-test = "categories"]',
     filters: '//*[@data-test = "filters"]',
     searchInput: '//label[text() = "Search"]/following-sibling::*//textarea',
-    searchButton: '//button[.//*[text() = "Search"]]',
     result: '//*[@data-test = "result"]',
 }
 
@@ -50,11 +49,26 @@ When(/^I type (.*) in search box$/, async searchQuery => {
     await context.page.keyboard.type(searchQuery)
 })
 
-When(/^I click Search button$/, async () => {
-    const [buttonElement] = await context.page.$x(XPath.searchButton)
+When(/^I click (.*) MUI ajax button$/, async label => {
+    const buttonXPath = `//*[contains(@class, "MuiButton-root")]/span[contains(@class, "MuiButton-label") and contains(text(), "${label}")]`
+    const [buttonElement] = await context.page.$x(buttonXPath)
     await buttonElement.click()
 
     await context.page.waitForResponse(response => response.status() === 200)
+})
+
+When(/^I click (.*) MUI navigation button$/, async label => {
+    const buttonXPath = `//*[contains(@class, "MuiButton-root")]/span[contains(@class, "MuiButton-label") and contains(text(), "${label}")]`
+    const [buttonElement] = await context.page.$x(buttonXPath)
+    await buttonElement.click()
+
+    await context.page.waitForNavigation()
+})
+
+Then(/^I should visit (.*) URL$/, async url => {
+    const currentUrl = await context.page.url()
+
+    assert.equal(currentUrl, url)
 })
 
 Then(/^I should see (\d+) results$/, async count => {
