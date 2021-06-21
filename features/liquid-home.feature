@@ -18,7 +18,7 @@ Feature: Liquid home
     When I click Yes, I’m sure submit button
     Then I can not see testgroup on the list
 
-  Scenario: Create user
+  Scenario: Create a user
     When I click [admin] link
     When I click Add link in Users section
     When I type testuser in Username field
@@ -28,7 +28,7 @@ Feature: Liquid home
     When I click Save submit button
     Then I can see testuser on the list
 
-  Scenario: Delete user
+  Scenario: Delete a user
     When I click [admin] link
     When I click Change link in Users section
     When I click testuser on the list
