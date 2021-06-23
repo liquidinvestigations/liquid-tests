@@ -49,12 +49,21 @@ Feature: Hoover
     Then I shoud see Size chip next to sort button
     Then I should see PublicWaterMassMailing.pdf result on 1st position
 
-  Scenario: Search for PDFs containing word "test"
+  Scenario: Search for 2015 year PDFs containing word "test"
     When I click Collections category
     When I click testdata bucket
     When I click File Types category
     When I click File type filter
     When I click pdf bucket
+    Then I should see pdf chip under Filters
     When I type test in search box
     When I click Search MUI ajax button
     Then I should see 2 results
+    When I click Dates category
+    When I click 2015 bucket
+    Then I should see 2015 chip under Filters
+    Then I should see 1 results
+    When I click File Sizes category
+    When I click 1 MB - 500 MB bucket
+    Then I should see 1 MB - 500 MB chip under Filters
+    Then I should see 1 results

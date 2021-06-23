@@ -12,19 +12,19 @@ const XPath = {
     sortMenu: '//*[@data-test = "sort-menu"]',
 }
 
-When(/^I click (.*) category$/, async category => {
+When(/^I click (.+) category$/, async category => {
     const categoryXPath = `${XPath.categories}//*[text() = "${category}"]`
     await context.page.waitForXPath(categoryXPath)
     const [categoryElement] = await context.page.$x(categoryXPath)
     await categoryElement.click()
 
-    const [filtersElement] = await context.page.$x(XPath.filters)
-    await waitForTransitionEnd(filtersElement)
+    //const [filtersElement] = await context.page.$x(XPath.filters)
+    //await waitForTransitionEnd(filtersElement)
 
     await waitForMilliseconds(1000) // wait for long lists to render
 })
 
-When(/^I click (.*) filter$/, async filter => {
+When(/^I click (.+) filter$/, async filter => {
     const filterXPath = `${XPath.filters}//*[contains(@class, "MuiButtonBase-root") and .//*[text() = "${filter}"]]`
     await context.page.waitForXPath(filterXPath)
     const [filterElement] = await context.page.$x(filterXPath)
@@ -36,7 +36,7 @@ When(/^I click (.*) filter$/, async filter => {
     await waitForTransitionEnd(collapseElement)
 })
 
-When(/^I click (.*) bucket$/, async bucket => {
+When(/^I click (.+) bucket$/, async bucket => {
     const bucketXPath = `${XPath.filters}//*[contains(@class, "MuiList-root")]//*[text() = "${bucket}"]`
     await context.page.waitForXPath(bucketXPath)
     const [bucketElement] = await context.page.$x(bucketXPath)
@@ -45,13 +45,13 @@ When(/^I click (.*) bucket$/, async bucket => {
     await context.page.waitForResponse(response => response.status() === 200)
 })
 
-When(/^I type (.*) in search box$/, async searchQuery => {
+When(/^I type (.+) in search box$/, async searchQuery => {
     const [searchBoxElement] = await context.page.$x(XPath.searchInput)
     await searchBoxElement.focus()
     await context.page.keyboard.type(searchQuery)
 })
 
-When(/^I click (.*) MUI ajax button$/, async label => {
+When(/^I click (.+) MUI ajax button$/, async label => {
     const buttonXPath = `//*[contains(@class, "MuiButton-root")]/span[contains(@class, "MuiButton-label") and contains(text(), "${label}")]`
     const [buttonElement] = await context.page.$x(buttonXPath)
     await buttonElement.click()
@@ -59,7 +59,7 @@ When(/^I click (.*) MUI ajax button$/, async label => {
     await context.page.waitForResponse(response => response.status() === 200)
 })
 
-When(/^I click (.*) MUI navigation button$/, async label => {
+When(/^I click (.+) MUI navigation button$/, async label => {
     const buttonXPath = `//*[contains(@class, "MuiButton-root")]/span[contains(@class, "MuiButton-label") and contains(text(), "${label}")]`
     const [buttonElement] = await context.page.$x(buttonXPath)
     await buttonElement.click()
@@ -67,13 +67,13 @@ When(/^I click (.*) MUI navigation button$/, async label => {
     await context.page.waitForNavigation()
 })
 
-Then(/^I should visit (.*) URL$/, async url => {
+Then(/^I should visit (.+) URL$/, async url => {
     const currentUrl = await context.page.url()
 
     assert.equal(currentUrl, url)
 })
 
-Then(/^I should see (\d+) results$/, async count => {
+Then(/^I should see (\d+) result(?:s?)$/, async count => {
     await context.page.waitForXPath(XPath.result)
     const resultElements = await context.page.$x(XPath.result)
 
@@ -89,7 +89,7 @@ When(/^I click sort button$/, async () => {
     await waitForTransitionEnd(collapseElement)
 })
 
-When(/^I click (.*) menu item$/, async label => {
+When(/^I click (.+) menu item$/, async label => {
     const menuItemXPath = `//*[contains(@class, "MuiMenu-paper")]/ul/li[contains(@class, "MuiMenuItem-root") and contains(text(), "${label}")]`
     const [menuItemElement] = await context.page.$x(menuItemXPath)
     await menuItemElement.click()
@@ -97,17 +97,24 @@ When(/^I click (.*) menu item$/, async label => {
     await context.page.waitForResponse(response => response.status() === 200)
 })
 
-Then(/^I shoud see (.*) chip next to sort button$/, async label => {
+Then(/^I shoud see (.+) chip next to sort button$/, async label => {
     const chipXPath = `${XPath.sortButton}/parent::*//*[contains(@class, "MuiChip-root")]//*[contains(text(), "${label}")]`
     const [chipElement] = await context.page.$x(chipXPath)
 
     expect(chipElement).to.exist
 })
 
-Then(/^I should see (.*) result on (\d+)(st|nd|rd|th) position$/, async (title, position, suffix) => {
+Then(/^I should see (.+) result on (\d+)(?:st|nd|rd|th) position$/, async (title, position) => {
     await context.page.waitForXPath(XPath.result)
     const resultElements = await context.page.$x(XPath.result)
     const [resultElement] = await resultElements[parseInt(position) - 1].$x(`.//*[contains(text(), "${title}")]`)
 
     expect(resultElement).to.exist
+})
+
+Then(/^I should see (.+) chip under (Filters|Query)$/, async (label, position) => {
+    const chipXPath = `//*[text() = "${position}"]/parent::*//*[contains(@class, "MuiChip-root")]//*[text()[contains(.,"${label}")]]`
+    const [chipElement] = await context.page.$x(chipXPath)
+
+    expect(chipElement).to.exist
 })
