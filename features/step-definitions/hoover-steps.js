@@ -1,5 +1,5 @@
 const { When, Then } = require('@cucumber/cucumber')
-const { assert } = require('chai')
+const { assert, expect } = require('chai')
 const { waitForMilliseconds, waitForTransitionEnd } = require('../shared-objects/helpers')
 const context = require('../shared-objects/context')
 
@@ -8,6 +8,8 @@ const XPath = {
     filters: '//*[@data-test = "filters"]',
     searchInput: '//label[text() = "Search"]/following-sibling::*//textarea',
     result: '//*[@data-test = "result"]',
+    sortButton: '//*[@data-test = "sort-button"]',
+    sortMenu: '//*[@data-test = "sort-menu"]',
 }
 
 When(/^I click (.*) category$/, async category => {
@@ -76,4 +78,36 @@ Then(/^I should see (\d+) results$/, async count => {
     const resultElements = await context.page.$x(XPath.result)
 
     assert.equal(resultElements.length, count)
+})
+
+When(/^I click sort button$/, async () => {
+    const [buttonElement] = await context.page.$x(XPath.sortButton)
+    await buttonElement.click()
+
+    await context.page.waitForXPath(XPath.sortMenu)
+    const [collapseElement] = await context.page.$x(XPath.sortMenu)
+    await waitForTransitionEnd(collapseElement)
+})
+
+When(/^I click (.*) menu item$/, async label => {
+    const menuItemXPath = `//*[contains(@class, "MuiMenu-paper")]/ul/li[contains(@class, "MuiMenuItem-root") and contains(text(), "${label}")]`
+    const [menuItemElement] = await context.page.$x(menuItemXPath)
+    await menuItemElement.click()
+
+    await context.page.waitForResponse(response => response.status() === 200)
+})
+
+Then(/^I shoud see (.*) chip next to sort button$/, async label => {
+    const chipXPath = `${XPath.sortButton}/parent::*//*[contains(@class, "MuiChip-root")]//*[contains(text(), "${label}")]`
+    const [chipElement] = await context.page.$x(chipXPath)
+
+    expect(chipElement).to.exist
+})
+
+Then(/^I should see (.*) result on (\d+)(st|nd|rd|th) position$/, async (title, position, suffix) => {
+    await context.page.waitForXPath(XPath.result)
+    const resultElements = await context.page.$x(XPath.result)
+    const [resultElement] = await resultElements[parseInt(position) - 1].$x(`.//*[contains(text(), "${title}")]`)
+
+    expect(resultElement).to.exist
 })

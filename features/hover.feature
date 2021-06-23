@@ -38,6 +38,17 @@ Feature: Hoover
     When I click this handy guide link
     Then I should visit https://github.com/liquidinvestigations/hoover-search/wiki/Guide-to-search-terms URL
 
+  Scenario: Change results order
+    When I click Collections category
+    When I click testdata bucket
+    When I type testing test in search box
+    When I click Search MUI ajax button
+    Then I should see PublicWaterMassMailing.pdf result on 6th position
+    When I click sort button
+    When I click Size menu item
+    Then I shoud see Size chip next to sort button
+    Then I should see PublicWaterMassMailing.pdf result on 1st position
+
   Scenario: Search for PDFs containing word "test"
     When I click Collections category
     When I click testdata bucket
