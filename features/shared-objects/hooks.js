@@ -14,7 +14,8 @@ BeforeAll(async () => {
         headless: process.env.HEADLESS !== 'false',
         args: [`--window-size=${options.width},${options.height}`],
     })
-    context.page = await context.browser.newPage()
+    const pages = await context.browser.pages()
+    context.page = pages[0]
     await context.page.setViewport({ width: options.width, height: options.height })
 })
 
