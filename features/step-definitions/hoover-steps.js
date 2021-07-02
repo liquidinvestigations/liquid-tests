@@ -240,3 +240,34 @@ Then(/^I should see a new tab open$/, async () => {
 
     await pages[pages.length - 1].close()
 })
+
+Then(/^I should have MD5 and path in the clipboard$/, async () => {
+    expect(await context.page.evaluate(() => navigator.clipboard.readText()))
+        .to.equal("d43369c00226cd70193f6c38a51f6d51\r\n" +
+            "/pst/flags_jane_doe.pst//pst-test-2@aranetic.com/Inbox/6.eml")
+})
+
+When(/^I click (.+) tab on preview$/, async label => {
+    const tabXPath = `//*[contains(@class, "MuiTab-root")]/span[contains(@class, "MuiTab-wrapper") and contains(text(), "${label}")]`
+    const [tabElement] = await context.page.$x(tabXPath)
+    await tabElement.click()
+})
+
+Then(/^I should see (.+) tab selected$/, async label => {
+    const tabXPath = `//*[contains(@class, "MuiTab-root") and ./span[contains(@class, "MuiTab-wrapper") and contains(text(), "${label}")]]`
+    const [tabElement] = await context.page.$x(tabXPath)
+    const className = await (await tabElement.getProperty('className')).jsonValue()
+
+    expect(className).to.contain('Mui-selected')
+})
+
+Then(/^I should see all collections selected$/, async () => {
+    const bucketXPath = `${XPath.filters}//*[contains(@class, "MuiList-root")]//input`
+    const bucketElements = await context.page.$x(bucketXPath)
+
+    expect(bucketElements).to.satisfy(bucketElements => {
+        return bucketElements.every(async bucketElement => {
+            return await (await bucketElement.getProperty('checked')).jsonValue()
+        })
+    })
+})

@@ -27,6 +27,11 @@ Feature: Hoover
     And I click Yes, I’m sure submit button
     Then I can not see testgroup on the list
 
+  Scenario: Select all collections
+    When I click Collections category
+    And I click Select all bucket
+    Then I should see all collections selected
+
   Scenario: Search for documents containing word "testing test"
     When I click Collections category
     And I click testdata bucket
@@ -133,6 +138,15 @@ Feature: Hoover
     And I click Download original file button on preview
     Then I should see 1st result file downloaded
 
+  Scenario: Navigate between preview tabs
+    When I click Collections category
+    And I click testdata bucket
+    And I type test in Search box
+    And I click Search MUI button
+    And I click 1st result
+    And I click Meta tab on preview
+    Then I should see Meta tab selected
+
   Scenario: Print document from preview
     When I click Collections category
     And I click testdata bucket
@@ -171,6 +185,16 @@ Feature: Hoover
     Then I should see 1st result to be highlighted
     When I press O navigation hotkey
     Then I should see a new tab open
+
+  Scenario: Press C hotkey to copy MD5 and path to clipboard
+    When I click Collections category
+    And I click testdata bucket
+    And I type test in Search box
+    And I click Search MUI button
+    And I click 1st result
+    Then I should see 1st result to be highlighted
+    When I press C navigation hotkey
+    Then I should have MD5 and path in the clipboard
 
   Scenario: Batch search
     When I click Batch search link
