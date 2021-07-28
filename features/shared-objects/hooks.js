@@ -16,6 +16,8 @@ BeforeAll(async () => {
         headless: process.env.HEADLESS !== 'false',
         args: [`--window-size=${options.width},${options.height}`],
     })
+    const browserContext = context.browser.defaultBrowserContext()
+    await browserContext.overridePermissions(process.env.HOOVER_URL, ['clipboard-read'])
     const pages = await context.browser.pages()
     context.page = pages[0]
     await context.page.setViewport({ width: options.width, height: options.height })
