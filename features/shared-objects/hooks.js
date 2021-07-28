@@ -3,8 +3,6 @@ const puppeteer = require('puppeteer')
 const { After, BeforeAll, AfterAll, setDefaultTimeout } = require('@cucumber/cucumber')
 const context = require('../shared-objects/context')
 
-setDefaultTimeout(60 * 1000)
-
 const options = {
     width: 1280,
     height: 1024,
@@ -12,6 +10,7 @@ const options = {
 }
 
 BeforeAll(async () => {
+    setDefaultTimeout(options.timeout)
     context.browser = await puppeteer.launch({
         headless: process.env.HEADLESS !== 'false',
         args: [`--window-size=${options.width},${options.height}`],
