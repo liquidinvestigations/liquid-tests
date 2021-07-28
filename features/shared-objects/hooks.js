@@ -1,12 +1,14 @@
 require('dotenv').config()
 const puppeteer = require('puppeteer')
-const { After, BeforeAll, AfterAll } = require('@cucumber/cucumber')
+const { After, BeforeAll, AfterAll, setDefaultTimeout } = require('@cucumber/cucumber')
 const context = require('../shared-objects/context')
+
+setDefaultTimeout(60 * 1000)
 
 const options = {
     width: 1280,
     height: 1024,
-    timeout: 30 * 1000,
+    timeout: 60 * 1000,
 }
 
 BeforeAll(async () => {
