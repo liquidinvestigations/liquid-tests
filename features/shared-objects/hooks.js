@@ -13,7 +13,11 @@ BeforeAll(async () => {
     setDefaultTimeout(options.timeout)
     context.browser = await puppeteer.launch({
         headless: process.env.HEADLESS !== 'false',
-        args: [`--window-size=${options.width},${options.height}`],
+        ignoreHTTPSErrors: true,
+        args: [
+            `--window-size=${options.width},${options.height}`,
+            `--ignore-certificate-errors`,
+        ],
     })
     const browserContext = context.browser.defaultBrowserContext()
     await browserContext.overridePermissions(process.env.HOOVER_URL, ['clipboard-read'])
