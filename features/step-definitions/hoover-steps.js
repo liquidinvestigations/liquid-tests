@@ -20,7 +20,13 @@ const XPath = {
 }
 
 const clickButton = async label => {
-    const buttonXPath = `//*[contains(@class, "MuiButton-root")]/span[contains(@class, "MuiButton-label") and contains(text(), "${label}")]`
+    const buttonXPath = `//button[contains(@class, "MuiButton-root")]/span[contains(@class, "MuiButton-label") and contains(text(), "${label}")]`
+    const [buttonElement] = await context.page.$x(buttonXPath)
+    await buttonElement.click()
+}
+
+const clickLinkButton = async label => {
+    const buttonXPath = `//a[contains(@class, "MuiButton-root")]/span[contains(@class, "MuiButton-label") and contains(text(), "${label}")]`
     const [buttonElement] = await context.page.$x(buttonXPath)
     await buttonElement.click()
 }
@@ -30,6 +36,14 @@ const resultAt = async position => {
     const resultElements = await context.page.$x(XPath.result)
     return resultElements[parseInt(position) - 1]
 }
+
+When(/^I hover search help$/, async () => {
+    const searchHelpXPath = `//form/*[contains(@class, "MuiGrid-container")]/*[position()=2]/*`
+    const [searchHelpElement] = await context.page.$x(searchHelpXPath)
+    const point = await searchHelpElement.clickablePoint()
+    await context.page.mouse.move(point.x, point.y)
+    await context.page.waitForXPath('//body/*[contains(@class, "MuiTooltip-popper")]')
+})
 
 When(/^I click (.+) category$/, async category => {
     const categoryXPath = `${XPath.categories}//*[text() = "${category}"]`
@@ -77,7 +91,7 @@ When(/^I click (.+) MUI button$/, async label => {
 })
 
 When(/^I click (.+) MUI navigation button$/, async label => {
-    await clickButton(label)
+    await clickLinkButton(label)
     await context.page.waitForNavigation()
 })
 
@@ -85,6 +99,15 @@ Then(/^I should visit (.+) URL$/, async url => {
     const currentUrl = await context.page.url()
 
     assert.equal(currentUrl, url)
+})
+
+Then(/^I should visit (.+) URL in new tab$/, async url => {
+    const newPage = await context.newPagePromise
+    const currentUrl = await newPage.url()
+
+    assert.equal(currentUrl, url)
+
+    await newPage.close()
 })
 
 Then(/^I should see (\d+) result(?:s?)$/, async count => {
@@ -212,6 +235,7 @@ When(/^I press (.) navigation hotkey$/, async key => {
 When(/^I press (.) hotkey$/, async key => {
     await context.page.keyboard.type(key.toLowerCase())
     await context.page.waitForResponse(response => response.status() === 200)
+    await waitForMilliseconds(500) // wait for render
 })
 
 When(/^I click (.+) button on preview$/, async title => {
@@ -243,8 +267,8 @@ Then(/^I should see a new tab open$/, async () => {
 
 Then(/^I should have MD5 and path in the clipboard$/, async () => {
     expect(await context.page.evaluate(() => navigator.clipboard.readText()))
-        .to.equal("d43369c00226cd70193f6c38a51f6d51\r\n" +
-            "/pst/flags_jane_doe.pst//pst-test-2@aranetic.com/Inbox/6.eml")
+        .to.equal("de6c1fac1544ebd9df8c73cc64089e22\r\n" +
+            "/no-extension/file_pst//pst-test-2@aranetic.com/Sent Items/1.eml")
 })
 
 When(/^I click (.+) tab on preview$/, async label => {

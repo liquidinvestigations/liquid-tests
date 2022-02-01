@@ -8,6 +8,11 @@ const clickLink = async linkXPath => {
     await context.page.waitForNavigation()
 }
 
+const clickLinkAsync = async linkXPath => {
+    const [linkElement] = await context.page.$x(linkXPath)
+    await linkElement.click()
+}
+
 const typeInLabeledField = async (text, label) => {
     const inputXPath = `//label[contains(text(), "${label}")]/following-sibling::input`
     const [inputElement] = await context.page.$x(inputXPath)
@@ -17,6 +22,10 @@ const typeInLabeledField = async (text, label) => {
 
 When(/^I click (.+) link$/, async link => {
     await clickLink(`//a[text() = "${link}"]`)
+})
+
+When(/^I click (.+) link _blank$/, async link => {
+    await clickLinkAsync(`//a[text() = "${link}"]`)
 })
 
 When(/^I click (.+) link in (.+) section$/, async (link, section) => {

@@ -15,10 +15,11 @@ BeforeAll(async () => {
         headless: process.env.HEADLESS !== 'false',
         args: [`--window-size=${options.width},${options.height}`],
     })
-    const browserContext = context.browser.defaultBrowserContext()
-    await browserContext.overridePermissions(process.env.HOOVER_URL, ['clipboard-read'])
+    //const browserContext = context.browser.defaultBrowserContext()
+    //await browserContext.overridePermissions(process.env.HOOVER_URL, ['clipboard-read'])
     const pages = await context.browser.pages()
     context.page = pages[0]
+    context.newPagePromise = new Promise(x => context.browser.on('targetcreated', target => x(target.page())))
     await context.page.setViewport({ width: options.width, height: options.height })
 })
 

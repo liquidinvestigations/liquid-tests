@@ -10,17 +10,17 @@ Feature: Hoover
 
   Scenario: Documentation link leads to correct website
     When I click documentation MUI navigation button
-    Then I should visit https://github.com/liquidinvestigations/docs/wiki URL
+    Then I should visit https://github.com/liquidinvestigations/docs/wiki/User-Guide:-Hoover URL
 
   Scenario: Admin create a group
-    When I click admin MUI navigation button
+    When I click Admin MUI navigation button
     And I click Add link in Groups section
     And I type testgroup in Name field
     And I click Save submit button
     Then I can see testgroup on the list
 
   Scenario: Admin delete a group
-    When I click admin MUI navigation button
+    When I click Admin MUI navigation button
     And I click Change link in Groups section
     And I click testgroup on the list
     And I click Delete link
@@ -40,8 +40,9 @@ Feature: Hoover
     Then I should see 7 results
 
   Scenario: Refine search link leads to correct website
-    When I click this handy guide link
-    Then I should visit https://github.com/liquidinvestigations/hoover-search/wiki/Guide-to-search-terms URL
+    When I hover search help
+    When I click this handy guide link _blank
+    Then I should visit https://github.com/liquidinvestigations/hoover-search/wiki/Guide-to-search-terms URL in new tab
 
   Scenario: Change results order
     When I click Collections category
@@ -97,11 +98,11 @@ Feature: Hoover
     And I click testdata bucket
     And I type * in Search box
     And I click Search MUI button
-    Then I should see usr-share-dict-words.txt result on 1st position
+    Then I should see message-without-subject.eml result on 1st position
     When I click next page button
-    Then I should see page-025-112.png result on 1st position
+    Then I should see sample_1920×1280.ppm result on 1st position
     When I click prev page button
-    Then I should see usr-share-dict-words.txt result on 1st position
+    Then I should see message-without-subject.eml result on 1st position
 
   Scenario: Open result preview
     When I click Collections category
@@ -194,10 +195,10 @@ Feature: Hoover
     And I click 1st result
     Then I should see 1st result to be highlighted
     When I press C navigation hotkey
-    Then I should have MD5 and path in the clipboard
+#    Then I should have MD5 and path in the clipboard
 
   Scenario: Batch search
-    When I click Batch search link
+    When I click Batch search MUI navigation button
     And I type testing\ntest in Batch search box
     And I click Batch search MUI button
     Then I should see 2 results
