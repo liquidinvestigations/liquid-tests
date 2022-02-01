@@ -13,10 +13,10 @@ BeforeAll(async () => {
     setDefaultTimeout(options.timeout)
     context.browser = await puppeteer.launch({
         headless: process.env.HEADLESS !== 'false',
+        ignoreHTTPSErrors: true,
         args: [
             `--window-size=${options.width},${options.height}`,
-            '--ignore-certificate-errors',
-            '--ignore-certificate-errors-spki-list'
+            `--ignore-certificate-errors`
         ],
     })
     //const browserContext = context.browser.defaultBrowserContext()
