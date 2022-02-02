@@ -49,7 +49,7 @@ Feature: Hoover
     And I click testdata bucket
     And I type testing test in Search box
     And I click Search MUI button
-    Then I should see PublicWaterMassMailing.pdf result on 6th position
+    Then I should see PublicWaterMassMailing.pdf result on 5th position
     When I click sort button
     And I click Size menu item
     Then I shoud see Size chip next to sort button
@@ -98,11 +98,11 @@ Feature: Hoover
     And I click testdata bucket
     And I type * in Search box
     And I click Search MUI button
-    Then I should see message-without-subject.eml result on 1st position
+    Then I should see sample_640×426.bmp result on 1st position
     When I click next page button
-    Then I should see sample_1920×1280.ppm result on 1st position
+    Then I should see US-original-Declaration-1776.jpg result on 1st position
     When I click prev page button
-    Then I should see message-without-subject.eml result on 1st position
+    Then I should see sample_640×426.bmp result on 1st position
 
   Scenario: Open result preview
     When I click Collections category

@@ -88,6 +88,7 @@ When(/^I type (.+) in (.+) box$/, async (searchQuery, inputLabel) => {
 When(/^I click (.+) MUI button$/, async label => {
     await clickButton(label)
     await context.page.waitForResponse(response => response.status() === 200)
+    await waitForMilliseconds(500) // wait for render
 })
 
 When(/^I click (.+) MUI navigation button$/, async label => {
