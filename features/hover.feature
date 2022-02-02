@@ -5,11 +5,11 @@ Feature: Hoover
     And I click Hoover link
 
   Scenario: About link leads to correct website
-    When I click about MUI navigation button
+    When I click About MUI navigation button
     Then I should visit https://github.com/liquidinvestigations/hoover-search URL
 
   Scenario: Documentation link leads to correct website
-    When I click documentation MUI navigation button
+    When I click Documentation MUI navigation button
     Then I should visit https://github.com/liquidinvestigations/docs/wiki/User-Guide:-Hoover URL
 
   Scenario: Admin create a group
@@ -98,11 +98,11 @@ Feature: Hoover
     And I click testdata bucket
     And I type * in Search box
     And I click Search MUI button
-    Then I should see sample_640×426.bmp result on 1st position
-    When I click next page button
     Then I should see US-original-Declaration-1776.jpg result on 1st position
+    When I click next page button
+    Then I should see easychair.txt result on 1st position
     When I click prev page button
-    Then I should see sample_640×426.bmp result on 1st position
+    Then I should see US-original-Declaration-1776.jpg result on 1st position
 
   Scenario: Open result preview
     When I click Collections category

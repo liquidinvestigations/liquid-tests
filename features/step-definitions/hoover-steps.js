@@ -254,7 +254,7 @@ When(/^I click (.+) button on preview$/, async title => {
     const [buttonElement] = await previewElement.$x(buttonXPath)
     await buttonElement.click()
 
-    await waitForMilliseconds(1000) // wait for action
+    await waitForMilliseconds(3000) // wait for action
 })
 
 Then(/^I should see a new tab open$/, async () => {
