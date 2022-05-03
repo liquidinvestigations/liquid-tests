@@ -20,6 +20,23 @@ const typeInLabeledField = async (text, label) => {
     await context.page.keyboard.type(text)
 }
 
+const login = async (username, password) => {
+    await context.page.goto(process.env.LIQUID_URL, { waitUntil: 'networkidle0' })
+
+    const [usernameElement] = await context.page.$x('//input[@name="username"]')
+    await usernameElement.focus()
+    await context.page.keyboard.type(username)
+
+    const [passwordElement] = await context.page.$x('//input[@name="password"]')
+    await passwordElement.focus()
+    await context.page.keyboard.type(password)
+
+    const [submitElement] = await context.page.$x('//button[@type="submit"]')
+    await submitElement.click()
+
+    await context.page.waitForNavigation({ waitUntil: 'networkidle0' })
+}
+
 When(/^I click (.+) link$/, async link => {
     await clickLink(`//a[text() = "${link}"]`)
 })
@@ -36,6 +53,13 @@ When(/^I click (.+) submit button$/, async link => {
     await clickLink(`//input[@type="submit" and @value="${link}"]`)
 })
 
+When(/^I click (.+) label$/, async text => {
+    const inputXPath = `//label[text()[contains(.,'${text}')]]`
+    const [labelElement] = await context.page.$x(inputXPath)
+    labelElement.click()
+    await context.page.waitForTimeout(3000)
+})
+
 When(/^I click (.+) on the list$/, async link => {
     await clickLink(`//th/a[text() = "${link}"]`)
 })
@@ -50,4 +74,13 @@ Then(/^I (can|can not) see (.+) on the list$/, async (see, link) => {
     } else if ('can not' === see) {
         expect(linkElement).to.not.exist
     }
+})
+
+When(/^I login as (.+) with password (.+)$/, async (username, password) => {
+    await login(username, password)
+})
+
+Then(/^I should be logged in as (.+)$/, async username => {
+    const [logoutElement] = await context.page.$x(`//*[text() = "Logout (${username})"]`)
+    expect(logoutElement).to.exist
 })
